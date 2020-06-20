@@ -66,9 +66,11 @@ public class bancoRepository {
             System.out.println(se);
         }
         System.out.println("Acción completada");
-    }
-    
-    //Código actualizar número de acciones disponibles de una compañía
+    }    
+ 
+    //------------------------------poiupio
+ 
+    //Login
     
     //Aquí deberá ir el código de hacer una puja
     
@@ -77,7 +79,11 @@ public class bancoRepository {
     //Código para detener temporizador
     
     //Código para decidir al ganador de la acción
-    
+ 
+    //------------------------------poiupio
+ 
+     //Código actualizar número de acciones disponibles de una compañía
+        
     //Código enviar notificación de ganador de compra
     
     //Código enviar notificación de rechazo de oferta
@@ -85,8 +91,7 @@ public class bancoRepository {
     //código enviar notificación de venta
     
     //Actualizar precio por acción
-    
-    //Login
+
     
     
 }
