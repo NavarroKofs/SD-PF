@@ -56,7 +56,7 @@ public class Subasta {
                     switchFlag();
                     bancoRepository.generarGanadores(propuestasCompras, getId(), isCompra());
                 }
-            }, 1*60*100);
+            }, 120000);
         }
     }
 }
