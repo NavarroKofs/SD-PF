@@ -105,6 +105,7 @@ public class bancoRepository {
             Subasta subasta = new Subasta(id);
             id++;
             subasta.setPropuestasCompras(t);
+            subasta.startTimer();
             subastas.add(subasta);
         } else {
             for (int i=0; i<subastas.size(); i++) {
@@ -114,6 +115,7 @@ public class bancoRepository {
                     Transaccion transaccion = (Transaccion) listaSubastasActivas.get(k);
                     if(transaccion.getRFCComp() == t.getRFCComp()) {
                         subastaActiva.setPropuestasCompras(t);
+                        subastaActiva.startTimer();
                         subastas.set(i, subastaActiva);
                     }
                 }
@@ -126,6 +128,7 @@ public class bancoRepository {
             Subasta publicacion = new Subasta(id);
             id++;
             publicacion.setPropuestasCompras(t);
+            publicacion.startTimer();
             publicaciones.add(publicacion);
         } else {
             for (int i=0; i<publicaciones.size(); i++) {
@@ -135,6 +138,7 @@ public class bancoRepository {
                     Transaccion transaccion = (Transaccion) listaPublicacionesPropuestas.get(k);
                     if(transaccion.getRFCComp() == t.getRFCComp()) {
                         publicacionesPropuestas.setPropuestasCompras(t);
+                        publicacionesPropuestas.startTimer();
                         publicaciones.set(i, publicacionesPropuestas);
                     }
                 }

@@ -19,17 +19,10 @@ public class Subasta {
     private ArrayList propuestasCompras = null;
     private boolean compra;
     private String id;
+    private boolean flag = false;
 
     public Subasta(int id) {
         this.id = String.valueOf(id) + UUID.randomUUID();
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() { 
-            @Override 
-            public void run() {
-                timer.cancel();
-                bancoRepository.generarGanadores(propuestasCompras, getId(), isCompra());
-            }
-        }, 1*60*100);
     }
     
     public String getId() {
@@ -48,5 +41,22 @@ public class Subasta {
         return this.compra;
     }
     
+    public void switchFlag(){
+        this.flag = !this.flag;
+    }
     
+    public void startTimer(){
+        if(!this.flag){
+            Timer timer = new Timer();
+            switchFlag();
+            timer.schedule(new TimerTask() {
+                @Override 
+                public void run() {
+                    timer.cancel();
+                    switchFlag();
+                    bancoRepository.generarGanadores(propuestasCompras, getId(), isCompra());
+                }
+            }, 1*60*100);
+        }
+    }
 }
