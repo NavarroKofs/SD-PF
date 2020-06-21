@@ -36,7 +36,7 @@ public final class DBManager {
  
     try {
  
-      String strCon = "jdbc:mysql://127.0.0.1/test?user=rtuser&password=123";
+      String strCon = "jdbc:mysql://127.0.0.1/test?user=root&password=admin";
       con = DriverManager.getConnection(strCon);
     } catch (SQLException se) {
       System.out.println(se);
