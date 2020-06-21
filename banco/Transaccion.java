@@ -72,6 +72,13 @@ public class Transaccion implements Serializable {
     public void setPrecioOperacion(float precioOperacion) {
         this.precioOperacion = precioOperacion;
     }
+    
+    public boolean isCompra(){
+        if(getAccionesOperadas() > 0){
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public String toString() {

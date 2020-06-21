@@ -12,8 +12,8 @@ import java.util.TimerTask;
  *
  * @author Roberto Navarro
  */
-public class Timeporalizadorinador extends Thread {
-    public Timeporalizadorinador() {
+public class Temporizador extends Thread {
+    public Temporizador() {
         
     }
     public void run() 
@@ -22,8 +22,9 @@ public class Timeporalizadorinador extends Thread {
         timer.schedule(new TimerTask() { 
             @Override 
             public void run() { 
+                timer.cancel();
                 System.out.println("Hola");
-            } 
+            }
         }, 1*60*100);
     }
     

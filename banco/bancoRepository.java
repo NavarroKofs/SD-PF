@@ -1,6 +1,4 @@
 package banco;
-
-import Province;
 import java.sql.*;
 import java.util.*;
  
@@ -10,6 +8,9 @@ import java.util.*;
  */
 
 public class bancoRepository {
+    private static ArrayList subastas = null;
+    private static ArrayList publicaciones = null;
+    private static int id = 0;
     
     public static ArrayList showAll() {
         ArrayList arr = new ArrayList();
@@ -88,5 +89,103 @@ public class bancoRepository {
     
     //Login
     
+    public static void enviarPropuesta(Transaccion t) { 
+        if(t.isCompra()) {
+            //es compra
+            añadirPropuestaCompra(t);
+        }
+        if (!t.isCompra()) {
+            //es venta
+            añadirPropuestaVenta(t);
+        }
+    }
     
+    public static void añadirPropuestaCompra(Transaccion t){
+        if(subastas.isEmpty()){
+            Subasta subasta = new Subasta(id);
+            id++;
+            subasta.setPropuestasCompras(t);
+            subastas.add(subasta);
+        } else {
+            for (int i=0; i<subastas.size(); i++) {
+                Subasta subastaActiva = (Subasta) subastas.get(i);
+                ArrayList listaSubastasActivas = subastaActiva.getPropuestasCompras();
+                for(int k=0; k<listaSubastasActivas.size(); k++) {
+                    Transaccion transaccion = (Transaccion) listaSubastasActivas.get(k);
+                    if(transaccion.getRFCComp() == t.getRFCComp()) {
+                        subastaActiva.setPropuestasCompras(t);
+                        subastas.set(i, subastaActiva);
+                    }
+                }
+            } 
+        }
+    }
+    
+    public static void añadirPropuestaVenta(Transaccion t) {
+        if(publicaciones.isEmpty()){
+            Subasta publicacion = new Subasta(id);
+            id++;
+            publicacion.setPropuestasCompras(t);
+            publicaciones.add(publicacion);
+        } else {
+            for (int i=0; i<publicaciones.size(); i++) {
+                Subasta publicacionesPropuestas = (Subasta) publicaciones.get(i);
+                ArrayList listaPublicacionesPropuestas = publicacionesPropuestas.getPropuestasCompras();
+                for(int k=0; k<listaPublicacionesPropuestas.size(); k++) {
+                    Transaccion transaccion = (Transaccion) listaPublicacionesPropuestas.get(k);
+                    if(transaccion.getRFCComp() == t.getRFCComp()) {
+                        publicacionesPropuestas.setPropuestasCompras(t);
+                        publicaciones.set(i, publicacionesPropuestas);
+                    }
+                }
+            }
+        }
+    }
+    
+    public static void generarGanadores(ArrayList propuestasCompras, String id, boolean isCompra) {
+        actualizarListas(id, isCompra);
+        if(isCompra){
+            generarGanadorCompra(propuestasCompras);
+        } else {
+            generarGanadorVenta(propuestasCompras);
+        }
+    }
+    
+    public static void actualizarListas(String id, boolean isCompra){
+        if(isCompra){
+            for (int i=0; i<subastas.size(); i++){
+                Subasta subastaActiva = (Subasta) subastas.get(i);
+                String subastaId = subastaActiva.getId();
+                if (subastaId == id){
+                    subastas.remove(i);
+                }
+            }
+        } else {
+            for (int i=0; i<publicaciones.size(); i++){
+                Subasta subastaActiva = (Subasta) publicaciones.get(i);
+                String subastaId = subastaActiva.getId();
+                if (subastaId == id){
+                    publicaciones.remove(i);
+                }
+            }
+        }
+    }
+    
+    public static void generarGanadorVenta(ArrayList propuestasCompras){
+        //Aquí se ordena el array de Transacciones
+        for(int i=0; i<propuestasCompras.size(); i++){
+            
+        }
+        //Aquí agarro el primer elemento (el que tiene el MAYOR precio)
+        generarTransaccion((Transaccion) propuestasCompras.get(0));
+    }
+    
+    public static void generarGanadorCompra(ArrayList publicaciones){
+        //Aquí se ordena el array de Transacciones
+        for(int i=0; i<publicaciones.size(); i++){
+            
+        }
+        //Aquí agarro el primer elemento (el que tiene el MENOR precio) <-----Es diferente weee
+        generarTransaccion((Transaccion) publicaciones.get(0));
+    }
 }
