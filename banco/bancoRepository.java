@@ -125,6 +125,14 @@ public class bancoRepository {
         return 0;
     }
     
+    /*
+        public static void armarPropuesta(Subasta subasta, Transaccion t){
+        subasta.setPropuestasCompras(t);
+        subasta.setCompra(t.isCompra());
+        subasta.startTimer();
+    }
+    */
+    
     /*public static int añadirPropuestaCompra(Transaccion t){
         for (int i=0; i<subastas.size(); i++) {
             Subasta subastaActiva = (Subasta) subastas.get(i);
