@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author Roberto Navarro
  */
-public class Transaccion implements Serializable {
+public class Transaccion implements Serializable, Comparable<Transaccion>{
     private static final long serialVersionUID = 1L;
     private String RFCUsuario;
     private String RFCComp;
@@ -76,5 +76,14 @@ public class Transaccion implements Serializable {
     @Override
     public String toString() {
         return "Transacciones{" + "RFCUsuario=" + RFCUsuario + ", RFCComp=" + RFCComp + ", fecha=" + fecha + ", accionesOperadas=" + accionesOperadas + ", precioOperacion=" + precioOperacion + '}';
+    }
+        public int compareTo(Transaccion e){
+        if(e.getPrecioOperacion()>precioOperacion){
+            return -1;
+        }else if(e.getPrecioOperacion()>precioOperacion){
+            return 0;
+        }else{
+            return 1;
+        }
     }
 }
