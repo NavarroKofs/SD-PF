@@ -18,9 +18,7 @@ public class NewMain {
      * @param args the command line arguments
      */
     public static void main(String[] args)  {
-        Timeporalizadorinador tmp = new Timeporalizadorinador();
+        Temporizador tmp = new Temporizador();
         tmp.run();
-        tmp.stop();
-        
     }
 }
