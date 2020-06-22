@@ -68,25 +68,133 @@ public class bancoRepository {
         System.out.println("Acción completada");
     }
     
-    //Código actualizar número de acciones disponibles de una compañía
-    
-    //Aquí deberá ir el código de hacer una puja
-    
-    //Código para iniciar temporizador
-    
-    //Código para detener temporizador
-    
-    //Código para decidir al ganador de la acción
-    
-    //Código enviar notificación de ganador de compra
-    
+ //Código actualizar número de acciones disponibles de una compañía
+        public static void actualizarAccionesDisponibles(float i, Transaccion t) {
+        try {
+           
+            String QRY = "UPDATE companias SET valorActualAccion =" + t + "WHERE RFC=" + t.getRFCComp();
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);
+        } catch(SQLException se){
+            System.out.println(se);
+        }
+        System.out.println("Las acciones disponibles se han actualizado");
+    }
+ 
+  //Código enviar notificación de ganador de compra
+    public static void notificarCompra(String RFC){
+        String estado = "comprado";
+        ArrayList notificaciones;
+        notificaciones = obtenerNotificaciones(RFC, estado);
+        
+        System.out.println("Usted ha ganado las siguientes compras: ");
+        for(int i = 0; i < notificaciones.size(); i++){
+            if(notificaciones.isEmpty()){
+                System.out.println("Usted no tiene compras ganadas");
+            }
+            System.out.println(notificaciones.get(i));
+        }
+    }
     //Código enviar notificación de rechazo de oferta
-    
+    public static void notificarRechazo(String RFC){
+        String estado = "perdido";
+        ArrayList notificaciones;
+        notificaciones = obtenerNotificaciones(RFC, estado);
+        
+        System.out.println("Usted ha perdido las siguientes ventas: ");
+        for(int i = 0; i < notificaciones.size(); i++){
+            if(notificaciones.isEmpty()){
+                System.out.println("Usted no tiene ventas perdidas");
+            }
+            System.out.println(notificaciones.get(i));
+        }
+    }
     //código enviar notificación de venta
+    public static void notificarVenta(String RFC){
+        String estado = "vendido";
+        ArrayList notificaciones;
+        notificaciones = obtenerNotificaciones(RFC, estado);
+        
+        System.out.println("Usted ha vendido: ");
+        for(int i = 0; i < notificaciones.size(); i++){
+            if(notificaciones.isEmpty()){
+                System.out.println("Usted no tiene ventas");
+            }
+            System.out.println(notificaciones.get(i));
+        }
+    }
     
-    //Actualizar precio por acción
+    public static void generarGanadorVenta(ArrayList propuestasCompras){
+         String estado = "vendido";
+        //Aquí se ordena el array de Transacciones
+
+        Comparator<Integer> comparador = Collections.reverseOrder();
+        Collections.sort(propuestasCompras, comparador);
+        
+        //Aquí agarro el primer elemento (el que tiene el MAYOR precio)
+        generarTransaccion((Transaccion) propuestasCompras.get(0));
+        almacenarNotificaciones((Transaccion)propuestasCompras.get(0), estado);
+
+        
+    }
+    public static ArrayList obtenerNotificaciones(String RFC, String estado){
+                ArrayList arr = new ArrayList();
+        try {
+            String QRY = "SELECT * FROM notificaciones WHERE RFCUsuario = '" + RFC + "AND estado =" + estado + "'";
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);
+            while (rs.next()) {
+                Notificaciones notificacion = new Notificaciones();
+                notificacion.setRFCUsuario(rs.getString("RFCUsuario"));
+                notificacion.setPrecioOperacion(rs.getFloat("ultPrecioCompra"));
+                notificacion.setEstado(rs.getString("estado"));
+                arr.add(notificacion);
+            }
+        } catch (SQLException se) {
+            System.out.println(se);
+        }
+        return arr;
+    }
+    public static void almacenarNotificaciones(Transaccion t, String estado){
+          try {
+              
+            String QRY = "INSERT INTO notificaciones (RFCUsuario, fecha,"
+            + "precioOperacion, estado) values('" + t.getRFCUsuario() + "', '" + t.getFecha() +  "', '" +
+            "', '" + t.getPrecioOperacion() + "', '" + estado + "'";
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);
+        } catch(SQLException se){
+            System.out.println(se);
+        }
+        System.out.println("Acción completada");
+    }
     
-    //Login
+    public static void generarGanadorCompra(ArrayList publicaciones){
+        String estado = "comprado";
+         ArrayList rechazados;
+        //Aquí se ordena el array de Transacciones
+     
+            Collections.sort(publicaciones);
+            
+        
+        //Aquí agarro el primer elemento (el que tiene el MENOR precio) <-----Es diferente weee
+        generarTransaccion((Transaccion) publicaciones.get(0));
+        
+        almacenarNotificaciones((Transaccion)publicaciones.get(0), estado);
+                //rechazados 
+        publicaciones.remove(0);
+        if(publicaciones.size() > 0){
+            rechazados = publicaciones;
+            estado = "perdido";
+            for(int i = 0; i < rechazados.size(); i++){
+                almacenarNotificaciones((Transaccion)rechazados.get(i), estado);
+            }
+        }
+
+    }
     
     
 }
