@@ -40,6 +40,10 @@ public class Subasta {
     public boolean isCompra() {
         return this.compra;
     }
+
+    public void setCompra(boolean compra) {
+        this.compra = compra;
+    }
     
     public void switchFlag(){
         this.flag = !this.flag;

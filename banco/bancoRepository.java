@@ -89,7 +89,7 @@ public class bancoRepository {
     
     //Login
     
-    public static void enviarPropuesta(Transaccion t) { 
+    /*public static void enviarPropuesta(Transaccion t) { 
         if(t.isCompra()) {
             //es compra
             añadirPropuestaCompra(t);
@@ -98,9 +98,37 @@ public class bancoRepository {
             //es venta
             añadirPropuestaVenta(t);
         }
+    }*/
+    
+    //Ahora recibe cualquier tipo de transacción
+    public static int enviarPropuesta(Transaccion t){
+        for (int i=0; i<subastas.size(); i++) {
+            Subasta subastaActiva = (Subasta) subastas.get(i);
+            ArrayList listaSubastasActivas = subastaActiva.getPropuestasCompras();
+            for(int k=0; k<listaSubastasActivas.size(); k++) {
+                Transaccion transaccion = (Transaccion) listaSubastasActivas.get(k);
+                if((transaccion.getRFCComp() == t.getRFCComp()) && (transaccion.isCompra() == t.isCompra())) {
+                    subastaActiva.setPropuestasCompras(t);
+                    subastaActiva.startTimer();
+                    if(t.isCompra()) {
+                        subastaActiva.setCompra(true);
+                    } else {
+                        subastaActiva.setCompra(false);
+                    }
+                    subastas.set(i, subastaActiva);
+                    return 1;
+                }
+            }
+        }
+        Subasta subasta = new Subasta(id);
+        id++;
+        subasta.setPropuestasCompras(t);
+        subasta.startTimer();
+        subastas.add(subasta);
+        return 0;
     }
     
-    public static int añadirPropuestaCompra(Transaccion t){
+    /*public static int añadirPropuestaCompra(Transaccion t){
         for (int i=0; i<subastas.size(); i++) {
             Subasta subastaActiva = (Subasta) subastas.get(i);
             ArrayList listaSubastasActivas = subastaActiva.getPropuestasCompras();
@@ -120,8 +148,9 @@ public class bancoRepository {
         subasta.startTimer();
         subastas.add(subasta);
         return 0;
-    }
+    }*/
     //Refactorizar ---
+    /*
     public static int añadirPropuestaVenta(Transaccion t) {
         for (int i=0; i<publicaciones.size(); i++) {
             Subasta publicacionesPropuestas = (Subasta) publicaciones.get(i);
@@ -142,21 +171,18 @@ public class bancoRepository {
         publicacion.startTimer();
         publicaciones.add(publicacion);
         return 0;
-    }
+    }*/
     
     public static void generarGanadores(ArrayList propuestasCompras, String id, boolean isCompra) {
-        actualizarListas(id, isCompra);
+        actualizarListas(id);
         if(isCompra){
             generarGanadorCompra(propuestasCompras);
         } else {
             generarGanadorVenta(propuestasCompras);
         }
-        /*
-        Si sobran acciones, se devuelve al vendedor
-        */
     }
     
-    public static void actualizarListas(String id, boolean isCompra){
+    /*public static void actualizarListas(String id, boolean isCompra){
         //Refactorizar
         if(isCompra){
             for (int i=0; i<subastas.size(); i++){
@@ -173,6 +199,16 @@ public class bancoRepository {
                 if (subastaId == id){
                     publicaciones.remove(i);
                 }
+            }
+        }
+    }*/
+    
+    public static void actualizarListas(String id){
+        for (int i=0; i<subastas.size(); i++){
+            Subasta subastaActiva = (Subasta) subastas.get(i);
+            String subastaId = subastaActiva.getId();
+            if (subastaId == id){
+                subastas.remove(i);
             }
         }
     }
