@@ -151,6 +151,9 @@ public class bancoRepository {
         } else {
             generarGanadorVenta(propuestasCompras);
         }
+        /*
+        Si sobran acciones, se devuelve al vendedor
+        */
     }
     
     public static void actualizarListas(String id, boolean isCompra){
