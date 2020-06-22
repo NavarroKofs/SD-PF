@@ -9,7 +9,7 @@ import java.util.*;
 
 public class bancoRepository {
     private static ArrayList subastas = null;
-    private static ArrayList publicaciones = null;
+    //private static ArrayList publicaciones = null;
     private static int id = 0;
     
     public static ArrayList showAll() {
