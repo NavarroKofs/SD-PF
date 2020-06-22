@@ -109,12 +109,8 @@ public class bancoRepository {
                 Transaccion transaccion = (Transaccion) listaSubastasActivas.get(k);
                 if((transaccion.getRFCComp() == t.getRFCComp()) && (transaccion.isCompra() == t.isCompra())) {
                     subastaActiva.setPropuestasCompras(t);
+                    subastaActiva.setCompra(t.isCompra());
                     subastaActiva.startTimer();
-                    if(t.isCompra()) {
-                        subastaActiva.setCompra(true);
-                    } else {
-                        subastaActiva.setCompra(false);
-                    }
                     subastas.set(i, subastaActiva);
                     return 1;
                 }
@@ -123,6 +119,7 @@ public class bancoRepository {
         Subasta subasta = new Subasta(id);
         id++;
         subasta.setPropuestasCompras(t);
+        subasta.setCompra(t.isCompra());
         subasta.startTimer();
         subastas.add(subasta);
         return 0;
