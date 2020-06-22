@@ -100,50 +100,48 @@ public class bancoRepository {
         }
     }
     
-    public static void añadirPropuestaCompra(Transaccion t){
-        if(subastas.isEmpty()){
-            Subasta subasta = new Subasta(id);
-            id++;
-            subasta.setPropuestasCompras(t);
-            subasta.startTimer();
-            subastas.add(subasta);
-        } else {
-            for (int i=0; i<subastas.size(); i++) {
-                Subasta subastaActiva = (Subasta) subastas.get(i);
-                ArrayList listaSubastasActivas = subastaActiva.getPropuestasCompras();
-                for(int k=0; k<listaSubastasActivas.size(); k++) {
-                    Transaccion transaccion = (Transaccion) listaSubastasActivas.get(k);
-                    if(transaccion.getRFCComp() == t.getRFCComp()) {
-                        subastaActiva.setPropuestasCompras(t);
-                        subastaActiva.startTimer();
-                        subastas.set(i, subastaActiva);
-                    }
-                }
-            } 
-        }
-    }
-    
-    public static void añadirPropuestaVenta(Transaccion t) {
-        if(publicaciones.isEmpty()){
-            Subasta publicacion = new Subasta(id);
-            id++;
-            publicacion.setPropuestasCompras(t);
-            publicacion.startTimer();
-            publicaciones.add(publicacion);
-        } else {
-            for (int i=0; i<publicaciones.size(); i++) {
-                Subasta publicacionesPropuestas = (Subasta) publicaciones.get(i);
-                ArrayList listaPublicacionesPropuestas = publicacionesPropuestas.getPropuestasCompras();
-                for(int k=0; k<listaPublicacionesPropuestas.size(); k++) {
-                    Transaccion transaccion = (Transaccion) listaPublicacionesPropuestas.get(k);
-                    if(transaccion.getRFCComp() == t.getRFCComp()) {
-                        publicacionesPropuestas.setPropuestasCompras(t);
-                        publicacionesPropuestas.startTimer();
-                        publicaciones.set(i, publicacionesPropuestas);
-                    }
+    public static int añadirPropuestaCompra(Transaccion t){
+        for (int i=0; i<subastas.size(); i++) {
+            Subasta subastaActiva = (Subasta) subastas.get(i);
+            ArrayList listaSubastasActivas = subastaActiva.getPropuestasCompras();
+            for(int k=0; k<listaSubastasActivas.size(); k++) {
+                Transaccion transaccion = (Transaccion) listaSubastasActivas.get(k);
+                if(transaccion.getRFCComp() == t.getRFCComp()) {
+                    subastaActiva.setPropuestasCompras(t);
+                    subastaActiva.startTimer();
+                    subastas.set(i, subastaActiva);
+                    return 1;
                 }
             }
         }
+        Subasta subasta = new Subasta(id);
+        id++;
+        subasta.setPropuestasCompras(t);
+        subasta.startTimer();
+        subastas.add(subasta);
+        return 0;
+    }
+    //Refactorizar ---
+    public static int añadirPropuestaVenta(Transaccion t) {
+        for (int i=0; i<publicaciones.size(); i++) {
+            Subasta publicacionesPropuestas = (Subasta) publicaciones.get(i);
+            ArrayList listaPublicacionesPropuestas = publicacionesPropuestas.getPropuestasCompras();
+            for(int k=0; k<listaPublicacionesPropuestas.size(); k++) {
+                Transaccion transaccion = (Transaccion) listaPublicacionesPropuestas.get(k);
+                if(transaccion.getRFCComp() == t.getRFCComp()) {
+                    publicacionesPropuestas.setPropuestasCompras(t);
+                    publicacionesPropuestas.startTimer();
+                    publicaciones.set(i, publicacionesPropuestas);
+                    return 1;
+                }
+            }
+        }
+        Subasta publicacion = new Subasta(id);
+        id++;
+        publicacion.setPropuestasCompras(t);
+        publicacion.startTimer();
+        publicaciones.add(publicacion);
+        return 0;
     }
     
     public static void generarGanadores(ArrayList propuestasCompras, String id, boolean isCompra) {
@@ -156,6 +154,7 @@ public class bancoRepository {
     }
     
     public static void actualizarListas(String id, boolean isCompra){
+        //Refactorizar
         if(isCompra){
             for (int i=0; i<subastas.size(); i++){
                 Subasta subastaActiva = (Subasta) subastas.get(i);
@@ -180,7 +179,7 @@ public class bancoRepository {
         for(int i=0; i<propuestasCompras.size(); i++){
             
         }
-        //Aquí agarro el primer elemento (el que tiene el MAYOR precio)
+        //Aquí agarro el primer elemento (el que tiene el MENOR precio)
         generarTransaccion((Transaccion) propuestasCompras.get(0));
     }
     
@@ -189,7 +188,7 @@ public class bancoRepository {
         for(int i=0; i<publicaciones.size(); i++){
             
         }
-        //Aquí agarro el primer elemento (el que tiene el MENOR precio) <-----Es diferente weee
+        //Aquí agarro el primer elemento (el que tiene el MAYOR precio) <-----Es diferente weee
         generarTransaccion((Transaccion) publicaciones.get(0));
     }
 }
