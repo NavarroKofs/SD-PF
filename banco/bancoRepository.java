@@ -69,6 +69,15 @@ public class bancoRepository {
         System.out.println("Acción completada");
     }
     
+    public static boolean check_user(String RFC){
+        boolean user_exist = true;
+                
+        
+                
+        
+        return user_exist;
+    }
+        
     //Código actualizar número de acciones disponibles de una compañía
     
     //Aquí deberá ir el código de hacer una puja
