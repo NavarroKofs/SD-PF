@@ -15,7 +15,7 @@ public class BankServer {
       Registry registry = LocateRegistry.createRegistry(1099);
  
       //Instantiate server object
-      TransactionObject po = new TransactionObject();
+      ProvinceObject po = new ProvinceObject();
  
       //Register server object
       registry.rebind("Bank", po);

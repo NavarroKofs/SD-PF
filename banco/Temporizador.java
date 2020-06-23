@@ -14,11 +14,12 @@ public class Temporizador extends Thread {
 
     Temporizador(Transaccion t) {
         this.ongoing_transaction = t;
+        run();
     }
     
     class MyTask extends TimerTask {
         public void run() {
-           System.out.println("Task is running");
+           System.out.println("WIP");
         }
     }    
     
@@ -26,7 +27,7 @@ public class Temporizador extends Thread {
     {
         Timer timer = new Timer();
         
-        timer.schedule(transaction_timer, 1*60*100);
+        timer.schedule(transaction_timer, 2*60*1000);
     }
     
     public void stop_timer() 

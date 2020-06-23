@@ -70,10 +70,26 @@ public class bancoRepository {
     }
     
     public static boolean check_user(String RFC){
-        boolean user_exist = true;
-                
+        boolean user_exist = false;
+        ArrayList<String> users = new ArrayList<String>();      
         
-                
+        try {
+            String QRY = "SELECT * FROM usuarios where RFCUsuario='"+RFC+"' limit 1";
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);
+            
+            while (rs.next()) { 
+                users.add(rs.getString(1));
+            }  
+            
+            if(users.size() > 0){
+                user_exist=true;
+            }
+            
+        } catch (SQLException se) {
+            System.out.println(se);
+        }                    
         
         return user_exist;
     }
@@ -243,5 +259,24 @@ public class bancoRepository {
         }
         //Aquí agarro el primer elemento (el que tiene el MAYOR precio) <-----Es diferente weee
         generarTransaccion((Transaccion) publicaciones.get(0));
+    }
+
+    static ArrayList getAllTransactions() {
+        ArrayList<String> transactions = new ArrayList<String>();  
+        try {            
+            String QRY = "SELECT RFCComp,precioOperacion,accionesOperadas FROM transacciones";
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);            
+            
+            while (rs.next()) { 
+                transactions.add(rs.getString(1));
+                System.out.println(transactions);
+            }  
+                        
+        } catch (SQLException se) {
+            System.out.println(se);
+        }  
+        return transactions;
     }
 }
