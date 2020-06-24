@@ -385,4 +385,39 @@ public class bancoRepository {
         System.out.println(se);
       }
     }
+    
+    public static void  actualizarRechazos(Transaccion t) {
+      ArrayList portafolio = new ArrayList();
+      try {
+        String QRY = "SELECT * from usuarios WHERE RFCUsuario ='" + t.getRFCUsuario() + "' AND RFCCompania = '" + t.getRFCComp() + "' LIMIT 1";
+        Connection con = DBManager.getInstance().getConnection();
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(QRY);
+        while (rs.next()) {
+            Usuario item = new Usuario();
+            item.setRFCUsuario(rs.getString("RFCUsuario"));
+            item.setRFCComp(rs.getString("RFCCompania"));
+            item.setNumAcciones(rs.getInt("numAcciones"));
+            item.setUltPrecioCompra(rs.getFloat("ultPrecioCompra"));
+            portafolio.add(item);
+        }
+        PreparedStatement pstmt;
+        if(portafolio.size() == 1) {
+            Usuario item = new Usuario();
+            item = (Usuario) portafolio.get(0);
+            int numAcciones = t.getAccionesOperadas() + item.getNumAcciones();
+            if(numAcciones == 0) {
+                String SQL = "UPDATE usuarios SET ultPrecioCompra=? WHERE RFCUsuario=? AND RFCCompania=?";
+                pstmt = con.prepareStatement(SQL);
+                pstmt.setFloat(1, t.getPrecioOperacion());
+                pstmt.setString(2, t.getRFCUsuario());
+                pstmt.setString(3, t.getRFCComp());
+                pstmt.executeUpdate();
+                pstmt.close();
+            }
+        }
+      } catch (SQLException se) {
+        System.out.println(se);
+      }
+    }
 }
