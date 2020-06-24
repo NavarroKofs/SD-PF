@@ -86,7 +86,7 @@ public ProvinceObject() throws RemoteException {
 
     @Override
     public ArrayList obtenerNotificaciones(String userRFC, String estado) throws RemoteException {
-        try {
+      try {
         System.out.println("Invoke obtener notificaciones from " + getClientHost());
       } catch (ServerNotActiveException snae) {
         snae.printStackTrace();

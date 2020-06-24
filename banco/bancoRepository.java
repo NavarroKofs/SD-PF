@@ -183,7 +183,7 @@ public class bancoRepository {
         
     }
     public static ArrayList obtenerNotificaciones(String RFC, String estado){
-                ArrayList arr = new ArrayList();
+        ArrayList arr = new ArrayList();
         try {
             String QRY = "SELECT * FROM notificaciones WHERE RFCUsuario = '" + RFC + "' AND estado = '" + estado + "'";
             Connection con = DBManager.getInstance().getConnection();
