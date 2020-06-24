@@ -62,7 +62,7 @@ public class Notificaciones {
 
     @Override
     public String toString() {
-        return "Notificaciones{" + "RFCUsuario=" + RFCUsuario + ", fecha=" + fecha + ", precioOperacion=" + precioOperacion + ", estado=" + estado + '}';
+        return "precioOperacion=" + precioOperacion + " estado=" + estado;
     }
     
 }

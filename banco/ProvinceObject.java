@@ -21,12 +21,22 @@ public ProvinceObject() throws RemoteException {
 
     @Override
     public ArrayList showAll() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      try {
+        System.out.println("Invoke show all from " + getClientHost());
+      } catch (ServerNotActiveException snae) {
+        snae.printStackTrace();
+      }
+      return bancoRepository.showAll();
     }
 
     @Override
     public ArrayList getPortafiolio(String RFC) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      try {
+        System.out.println("Invoke get portafolio from " + getClientHost());
+      } catch (ServerNotActiveException snae) {
+        snae.printStackTrace();
+      }
+      return bancoRepository.getPortafolio(RFC);
     }
 
     @Override
@@ -42,16 +52,6 @@ public ProvinceObject() throws RemoteException {
         snae.printStackTrace();
       }
       return bancoRepository.check_user(RFC);
-    }
-
-    @Override
-    public ArrayList showAllTransactions() throws RemoteException {
-      try {
-        System.out.println("Invoke GetAllTransactions from " + getClientHost());
-      } catch (ServerNotActiveException snae) {
-        snae.printStackTrace();
-      }
-      return bancoRepository.getAllTransactions();
     }
         
     @Override
@@ -73,5 +73,25 @@ public ProvinceObject() throws RemoteException {
         ongoingTransactions.get(index).stop_timer();
         ongoingTransactions.remove(index);
     } 
+
+    @Override
+    public void enviarPropuesta(Transaccion t) throws RemoteException {
+    try {
+      System.out.println("Invoke enviarPropuesta from " + getClientHost());
+    } catch (ServerNotActiveException snae) {
+      snae.printStackTrace();
+    }
+      bancoRepository.enviarPropuesta(t);
+    }
+
+    @Override
+    public ArrayList obtenerNotificaciones(String userRFC, String estado) throws RemoteException {
+        try {
+        System.out.println("Invoke obtener notificaciones from " + getClientHost());
+      } catch (ServerNotActiveException snae) {
+        snae.printStackTrace();
+      }
+      return bancoRepository.obtenerNotificaciones(userRFC, estado);
+    }
 }
 

@@ -8,7 +8,7 @@ import java.util.*;
  */
 
 public class bancoRepository {
-    private static ArrayList subastas = null;
+    private static ArrayList subastas = new ArrayList();
     //private static ArrayList publicaciones = null;
     private static int id = 0;
     
@@ -43,7 +43,7 @@ public class bancoRepository {
             while (rs.next()) {
                 Transaccion transaccion = new Transaccion();
                 transaccion.setRFCUsuario(rs.getString("RFCUsuario"));
-                transaccion.setRFCComp(rs.getString("RFCComp"));
+                transaccion.setRFCComp(rs.getString("RFCCompania"));
                 transaccion.setAccionesOperadas(rs.getInt("numAcciones"));
                 transaccion.setPrecioOperacion(rs.getFloat("ultPrecioCompra"));
                 arr.add(transaccion);
@@ -56,17 +56,36 @@ public class bancoRepository {
     
     public static void generarTransaccion(Transaccion t) {
         try {
+          Connection con = DBManager.getInstance().getConnection();
+          String SQL = "INSERT INTO transacciones (RFCUsuario, RFCComp, fecha,"
+                     + " accionesOperadas, precioOperacion) values(?,?,?,?,?)";
+
+          PreparedStatement pstmt = con.prepareStatement(SQL);
+          pstmt.setString(1, t.getRFCUsuario());
+          pstmt.setString(2, t.getRFCComp());
+          pstmt.setDate(3, null);
+          pstmt.setInt(4, t.getAccionesOperadas());
+          pstmt.setFloat(5, t.getPrecioOperacion());
+
+          pstmt.executeUpdate();
+
+          pstmt.close();
+        } catch (SQLException se) {
+          System.out.println(se);
+        }
+        
+        /*try {
             String QRY = "INSERT INTO transacciones (RFCUsuario, RFCComp, fecha,"
             + " numAccionesOperadas, precioOperacion) values('" + t.getRFCUsuario() + "', '" +
-            t.getRFCComp() + "', '" + t.getFecha() +  "', '" + t.getAccionesOperadas() +
-            "', '" + t.getPrecioOperacion() + "'";
+            t.getRFCComp() + "', '" + t.getFecha() +  "', " + t.getAccionesOperadas() +
+            ", " + t.getPrecioOperacion();
             Connection con = DBManager.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(QRY);
         } catch(SQLException se){
             System.out.println(se);
         }
-        System.out.println("Acción completada");
+        System.out.println("Acción completada");*/
     }
     
     public static boolean check_user(String RFC){
@@ -94,20 +113,7 @@ public class bancoRepository {
         return user_exist;
     }
         
-    //Código actualizar número de acciones disponibles de una compañía
-    
-    //Aquí deberá ir el código de hacer una puja
-    
-    //Código para iniciar temporizador
-    
-    //Código para detener temporizador
-    
-    //Código para decidir al ganador de la acción
-    
-    //Código enviar notificación de ganador de compra
-    
- //Código actualizar número de acciones disponibles de una compañía
-        public static void actualizarAccionesDisponibles(float i, Transaccion t) {
+    public static void actualizarAccionesDisponibles(float i, Transaccion t) {
         try {
            
             String QRY = "UPDATE companias SET valorActualAccion =" + t + "WHERE RFC=" + t.getRFCComp();
@@ -164,7 +170,7 @@ public class bancoRepository {
     }
     
     public static void generarGanadorVenta(ArrayList propuestasCompras){
-         String estado = "vendido";
+        String estado = "vendido";
         //Aquí se ordena el array de Transacciones
 
         Comparator<Integer> comparador = Collections.reverseOrder();
@@ -179,14 +185,15 @@ public class bancoRepository {
     public static ArrayList obtenerNotificaciones(String RFC, String estado){
                 ArrayList arr = new ArrayList();
         try {
-            String QRY = "SELECT * FROM notificaciones WHERE RFCUsuario = '" + RFC + "AND estado =" + estado + "'";
+            String QRY = "SELECT * FROM notificaciones WHERE RFCUsuario = '" + RFC + "' AND estado = '" + estado + "'";
             Connection con = DBManager.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(QRY);
             while (rs.next()) {
                 Notificaciones notificacion = new Notificaciones();
                 notificacion.setRFCUsuario(rs.getString("RFCUsuario"));
-                notificacion.setPrecioOperacion(rs.getFloat("ultPrecioCompra"));
+                notificacion.setFecha(rs.getDate("fecha"));
+                notificacion.setPrecioOperacion(rs.getFloat("precioOperacion"));
                 notificacion.setEstado(rs.getString("estado"));
                 arr.add(notificacion);
             }
@@ -197,13 +204,20 @@ public class bancoRepository {
     }
     public static void almacenarNotificaciones(Transaccion t, String estado){
           try {
-              
-            String QRY = "INSERT INTO notificaciones (RFCUsuario, fecha,"
-            + "precioOperacion, estado) values('" + t.getRFCUsuario() + "', '" + t.getFecha() +  "', '" +
-            "', '" + t.getPrecioOperacion() + "', '" + estado + "'";
             Connection con = DBManager.getInstance().getConnection();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(QRY);
+
+            String QRY = "INSERT INTO notificaciones (RFCUsuario, fecha,"
+            + "precioOperacion, estado) values(?,?,?,?)";
+
+            PreparedStatement pstmt = con.prepareStatement(QRY);
+            pstmt.setString(1, t.getRFCUsuario());
+            pstmt.setDate(2, null);
+            pstmt.setFloat(3, t.getPrecioOperacion());
+            pstmt.setString(4, estado);
+
+            pstmt.executeUpdate();
+
+            pstmt.close();
         } catch(SQLException se){
             System.out.println(se);
         }
@@ -247,17 +261,19 @@ public class bancoRepository {
     
     //Ahora recibe cualquier tipo de transacción
     public static int enviarPropuesta(Transaccion t){
-        for (int i=0; i<subastas.size(); i++) {
-            Subasta subastaActiva = (Subasta) subastas.get(i);
-            ArrayList listaSubastasActivas = subastaActiva.getPropuestasCompras();
-            for(int k=0; k<listaSubastasActivas.size(); k++) {
-                Transaccion transaccion = (Transaccion) listaSubastasActivas.get(k);
-                if((transaccion.getRFCComp() == t.getRFCComp()) && (transaccion.isCompra() == t.isCompra())) {
-                    subastaActiva.setPropuestasCompras(t);
-                    subastaActiva.setCompra(t.isCompra());
-                    subastaActiva.startTimer();
-                    subastas.set(i, subastaActiva);
-                    return 1;
+        if(!subastas.isEmpty()){
+            for (int i=0; i<subastas.size(); i++) {
+                Subasta subastaActiva = (Subasta) subastas.get(i);
+                ArrayList listaSubastasActivas = subastaActiva.getPropuestasCompras();
+                for(int k=0; k<listaSubastasActivas.size(); k++) {
+                    Transaccion transaccion = (Transaccion) listaSubastasActivas.get(k);
+                    if((transaccion.getRFCComp() == t.getRFCComp()) && (transaccion.isCompra() == t.isCompra())) {
+                        subastaActiva.setPropuestasCompras(t);
+                        subastaActiva.setCompra(t.isCompra());
+                        subastaActiva.startTimer();
+                        subastas.set(i, subastaActiva);
+                        return 1;
+                    }
                 }
             }
         }

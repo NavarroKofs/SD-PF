@@ -63,6 +63,6 @@ public class Compania implements Serializable {
 
     @Override
     public String toString() {
-        return "Companias{" + "RFC=" + RFC + ", numAccionesTot=" + numAccionesTot + ", numAccionesDisp=" + numAccionesDisp + ", valorActualAccion=" + valorActualAccion + '}';
+        return "RFC=" + RFC + " numAccionesTot=" + numAccionesTot + " numAccionesDisp=" + numAccionesDisp + " valorActualAccion=" + valorActualAccion;
     }
 }

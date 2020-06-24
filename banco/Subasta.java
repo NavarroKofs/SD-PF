@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 public class Subasta {
     private Temporizador timer;
-    private ArrayList propuestasCompras = null;
+    private ArrayList propuestasCompras = new ArrayList();
     private boolean compra;
     private String id;
     private boolean flag = false;
@@ -60,7 +60,7 @@ public class Subasta {
                     switchFlag();
                     bancoRepository.generarGanadores(propuestasCompras, getId(), isCompra());
                 }
-            }, 120000);
+            }, 600);
         }
     }
 }

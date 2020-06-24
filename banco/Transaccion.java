@@ -82,7 +82,7 @@ public class Transaccion implements Serializable, Comparable<Transaccion>{
 
     @Override
     public String toString() {
-        return "Transacciones{" + "RFCUsuario=" + RFCUsuario + ", RFCComp=" + RFCComp + ", fecha=" + fecha + ", accionesOperadas=" + accionesOperadas + ", precioOperacion=" + precioOperacion + '}';
+        return " RFCComp= " + RFCComp + " || fecha=" + fecha + " || accionesOperadas=" + accionesOperadas + " || precioOperacion=" + precioOperacion;
     }
         public int compareTo(Transaccion e){
         if(e.getPrecioOperacion()>precioOperacion){

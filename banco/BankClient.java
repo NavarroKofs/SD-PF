@@ -1,10 +1,12 @@
 package banco;
 
+import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
  
@@ -22,7 +24,7 @@ public class BankClient {
             //Get reference to rmi registry server
             Registry registry = LocateRegistry.getRegistry("127.0.0.1");
             IRemoteProvince rp = (IRemoteProvince) registry.lookup("Bank");
-                     
+            
             while(!EXIT){
                 if(user_is_logged(rp)){
                     menu(rp);
@@ -38,7 +40,8 @@ public class BankClient {
     public static void menu(IRemoteProvince rp) {
       String selected_option = "";
       try {
-        while(!EXIT){
+        while(!EXIT){           
+            imprimirPortafolio(rp);
             System.out.print("**********Menu**********\n"+
                              "1.-Comprar\n"+
                              "2.-Vender\n"+
@@ -88,20 +91,20 @@ public class BankClient {
 
     private static void execute_compra(IRemoteProvince rp) throws RemoteException {
         try{
-            ArrayList<String> response = new ArrayList<String>();
+            ArrayList response = new ArrayList();
             ArrayList<String> infoTransaction = new ArrayList<String>();
             infoTransaction.add(userRFC);
-            
-            response = rp.showAllTransactions();
-            Iterator it = response.iterator();
-            int i = 1;
-            
+
+            response = rp.showAll();
+                        
             System.out.println("Las opciones de compra son:");
             System.out.println("\n------RFC de empresas-----");
-            while(it.hasNext()){
-                System.out.println(i+".-"+it.next());
-                i++;
+         
+            for(int i=0;i<response.size();i++){
+                Compania comp = (Compania) response.get(i);
+                System.out.println((i+1)+".-"+comp.toString());
             }
+    
             System.out.println("------\n");
             System.out.print("Introduzca el numero de la opcion\n->");
             String option_selected = entradaEscaner.nextLine();        
@@ -109,10 +112,11 @@ public class BankClient {
             String confirmation = entradaEscaner.nextLine();        
             
             if(confirmation.toLowerCase().equals("s")){
-               infoTransaction.add(response.get(parseInt(option_selected)-1));
+               Compania comp2 = (Compania) response.get(parseInt(option_selected)-1);
+               infoTransaction.add(comp2.getRFC());
                System.out.print("cuantas acciones desea comprar?\n->");
                String numAcciones = entradaEscaner.nextLine();
-               System.out.print("cuantos deseas ofrecer por accion?\n->");
+               System.out.print("cuantos desea ofrecer por accion?\n->");
                String ofertaPorAccion = entradaEscaner.nextLine();
                
                
@@ -136,14 +140,84 @@ public class BankClient {
     }
 
     private static void execute_venta(IRemoteProvince rp) throws RemoteException {        
-        System.out.println("\nWIP venta\n");
+        try{
+            ArrayList response = new ArrayList();
+            ArrayList<String> infoTransaction = new ArrayList<String>();
+            infoTransaction.add(userRFC);
+
+            response = rp.getPortafiolio(userRFC);
+                        
+            System.out.println("De que compañia desea vender:");
+            imprimirPortafolio(rp);
+            
+            System.out.print("Introduzca el numero de la opcion\n->");
+            String option_selected = entradaEscaner.nextLine();        
+            System.out.print("\nusted seleccionó ->"+ response.get(parseInt(option_selected)-1) +"\nestas seguro? s/n \n->");
+            String confirmation = entradaEscaner.nextLine();        
+            
+            if(confirmation.toLowerCase().equals("s")){
+               Transaccion comp2 = (Transaccion) response.get(parseInt(option_selected)-1);
+               infoTransaction.add(comp2.getRFCComp());
+               System.out.print("cuantas acciones desea vender?\n->");
+               String numAcciones = "-"+entradaEscaner.nextLine();
+               System.out.print("cuantos desea pedir por accion?\n->");
+               String ofertaPorAccion = entradaEscaner.nextLine();
+               
+               
+               //Cambiar
+                infoTransaction.add(numAcciones);
+                infoTransaction.add(ofertaPorAccion); 
+               
+               
+               save_transaction(rp, infoTransaction);
+               System.out.print("\n_____________________________________\n");
+               System.out.print("\tVenta publicada\n");
+               System.out.print("_____________________________________\n\n");
+            }else{
+               System.out.println("\n!!!!La opción elegida no existe!!!!!\n");
+               execute_compra(rp);
+            }
+                        
+        }catch(Exception e) {
+            System.out.println(e);
+        }
     }
 
     private static void execute_notificaciones(IRemoteProvince rp) throws RemoteException {        
-        System.out.println("\nWIP notificaciones\n");
+        ArrayList response = new ArrayList();
+        response = rp.obtenerNotificaciones(userRFC, "comprado");
+        
+        System.out.println("\n°°°°°°°°Acciones compradas°°°°°°°°");
+        for (int i = 0; i < response.size(); i++) {
+            System.out.println("->"+response.get(i).toString());
+        }
+        
+        response = rp.obtenerNotificaciones(userRFC, "vendido");
+        System.out.println("\n°°°°°°°°Acciones vendidas°°°°°°°°");
+        for (int i = 0; i < response.size(); i++) {
+            System.out.println("->"+response.get(i).toString());
+        }
+        System.out.println("\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\n");
+        
     }
 
     private static void save_transaction(IRemoteProvince rp, ArrayList<String> infoTransaction) throws RemoteException {
-        rp.startTransaction(infoTransaction);   
+        int cantidad = parseInt(infoTransaction.get(2));
+        float oferta = parseFloat(infoTransaction.get(3));
+        String RFCUsuario = infoTransaction.get(0);
+        String RFCCompania = infoTransaction.get(1);
+        
+        Transaccion t = new Transaccion(RFCUsuario, RFCCompania, new Date(), cantidad, oferta);
+
+        rp.enviarPropuesta(t);   
+    }
+
+    private static void imprimirPortafolio(IRemoteProvince rp) throws RemoteException {
+            ArrayList resp = rp.getPortafiolio(userRFC);
+            System.out.print("|||||||Portafolio|||||||\n");
+            for (int i = 0; i < resp.size(); i++) {
+                System.out.println((i+1)+".-"+ resp.get(i).toString());
+            }
+            System.out.print("||||||||||||||||||||||||\n");
     }
 }

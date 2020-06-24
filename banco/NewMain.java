@@ -5,6 +5,7 @@
  */
 package banco;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,7 +19,8 @@ public class NewMain {
      * @param args the command line arguments
      */
     public static void main(String[] args)  {
-        Temporizador tmp = new Temporizador();
-        tmp.run();
+        Transaccion t = new Transaccion("123456789a", "123456789l", new Date(), 2, (float) 200.00);
+
+        System.out.println(bancoRepository.enviarPropuesta(t)); 
     }
 }
