@@ -14,7 +14,7 @@ public interface IRemoteProvince extends Remote {
   public ArrayList findByName(String criteria) throws RemoteException;
 */
   public ArrayList showAll() throws RemoteException;
-  public ArrayList getPortafiolio(String RFC) throws RemoteException;
+  public ArrayList getPortafolio(String RFC) throws RemoteException;
   public void generarTransaccion(Transaccion t) throws RemoteException;
   public boolean check_user(String RFC) throws RemoteException;
   public void startTransaction(ArrayList<String> infoTransaction)throws RemoteException;

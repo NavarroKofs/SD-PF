@@ -30,7 +30,7 @@ public ProvinceObject() throws RemoteException {
     }
 
     @Override
-    public ArrayList getPortafiolio(String RFC) throws RemoteException {
+    public ArrayList getPortafolio(String RFC) throws RemoteException {
       try {
         System.out.println("Invoke get portafolio from " + getClientHost());
       } catch (ServerNotActiveException snae) {
