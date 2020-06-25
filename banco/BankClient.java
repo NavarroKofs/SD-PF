@@ -45,7 +45,7 @@ public class BankClient {
             System.out.print("**********Menu**********\n"+
                              "1.-Comprar\n"+
                              "2.-Vender\n"+
-                             "3.-Notificaciónes\n"+
+                             "3.-Notificaciones\n"+
                              "4.-Salir\n"+
                              "\n introduzca un numero\n->");
             selected_option = entradaEscaner.nextLine();
@@ -148,7 +148,7 @@ public class BankClient {
             ArrayList<String> infoTransaction = new ArrayList<String>();
             infoTransaction.add(userRFC);
 
-            response = rp.getPortafiolio(userRFC);
+            response = rp.getPortafolio(userRFC);
                         
             System.out.println("De que compañia desea vender:");
             imprimirPortafolio(rp);
@@ -216,7 +216,7 @@ public class BankClient {
     }
 
     private static void imprimirPortafolio(IRemoteProvince rp) throws RemoteException {
-            ArrayList resp = rp.getPortafiolio(userRFC);
+            ArrayList resp = rp.getPortafolio(userRFC);
             System.out.print("|||||||Portafolio|||||||\n");
             for (int i = 0; i < resp.size(); i++) {
                 System.out.println((i+1)+".-"+ resp.get(i).toString());

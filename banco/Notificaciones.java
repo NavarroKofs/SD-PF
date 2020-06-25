@@ -5,13 +5,15 @@
  */
 package banco;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author lupy1
  */
-public class Notificaciones {
+public class Notificaciones implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String RFCUsuario;
     private Date fecha;
     private float precioOperacion;

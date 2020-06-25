@@ -5,10 +5,13 @@
  */
 package banco;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -58,9 +61,13 @@ public class Subasta {
                 public void run() {
                     timer.cancel();
                     switchFlag();
-                    bancoRepository.generarGanadores(propuestasCompras, getId(), isCompra());
+                    try {
+                        bancoRepository.generarGanadores(propuestasCompras, getId(), isCompra());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Subasta.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-            }, 600);
+            }, 120000);
         }
     }
 }
