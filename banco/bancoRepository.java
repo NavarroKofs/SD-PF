@@ -54,6 +54,50 @@ public class bancoRepository {
         return arr;
     }
     
+    public static void almacenarTransacciones(Transaccion t){
+          try {
+            Connection con = DBManager.getInstance().getConnection();
+
+            String QRY = "INSERT INTO notificaciones (RFCUsuario, RFCCOMP, fecha,"
+            + "accionesOperadas, precioOperacion) values(?,?,?,?,?)";
+
+            PreparedStatement pstmt = con.prepareStatement(QRY);
+            pstmt.setString(1, t.getRFCUsuario());
+            pstmt.setString(2, t.getRFCComp());
+            pstmt.setDate(3, null);
+            pstmt.setInt(4, t.getAccionesOperadas());
+            pstmt.setFloat(5, t.getPrecioOperacion());
+
+            pstmt.executeUpdate();
+
+            pstmt.close();
+        } catch(SQLException se){
+            System.out.println(se);
+        }
+        System.out.println("Acción completada");
+    }
+    
+    public static ArrayList getTransacciones(String RFC) {
+        ArrayList arr = new ArrayList();
+        try {
+            String QRY = "SELECT * FROM transacciones WHERE RFCUsuario = '" + RFC + "'";
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);
+            while (rs.next()) {
+                Transaccion transaccion = new Transaccion();
+                transaccion.setRFCUsuario(rs.getString("RFCUsuario"));
+                transaccion.setRFCComp(rs.getString("RFCComp"));
+                transaccion.setAccionesOperadas(rs.getInt("accionesOperadas"));
+                transaccion.setPrecioOperacion(rs.getFloat("precioOperacion"));
+                arr.add(transaccion);
+            }
+        } catch (SQLException se) {
+            System.out.println(se);
+        }
+        return arr;
+    }    
+    
     public static void generarTransaccion(Transaccion t) {
         try {
           Connection con = DBManager.getInstance().getConnection();
