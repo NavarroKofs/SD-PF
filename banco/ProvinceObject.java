@@ -45,13 +45,13 @@ public ProvinceObject() throws RemoteException {
     }
 
     @Override
-    public boolean check_user(String RFC) throws RemoteException {
+    public boolean check_user(String usuario, String contrasena) throws RemoteException {
       try {
         System.out.println("Invoke check_user from " + getClientHost());
       } catch (ServerNotActiveException snae) {
         snae.printStackTrace();
       }
-      return bancoRepository.check_user(RFC);
+      return bancoRepository.check_user(usuario, contrasena);
     }
         
     @Override

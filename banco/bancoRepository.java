@@ -88,12 +88,12 @@ public class bancoRepository {
         System.out.println("Acción completada");*/
     }
     
-    public static boolean check_user(String RFC){
+    public static boolean check_user(String usuario, String contrasena){
         boolean user_exist = false;
         ArrayList<String> users = new ArrayList<String>();      
         
         try {
-            String QRY = "SELECT * FROM usuarios where RFCUsuario='"+RFC+"' limit 1";
+            String QRY = "SELECT * FROM users where usuario='"+usuario+"' AND contrasena='"+contrasena+"' limit 1";
             Connection con = DBManager.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(QRY);

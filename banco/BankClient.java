@@ -29,7 +29,7 @@ public class BankClient {
                 if(user_is_logged(rp)){
                     menu(rp);
                 } else {  
-                    System.out.println("RFC incorrecto");
+                    System.out.println("Usuario o contraseña incorrecto");
                 }
             }
         } catch (Exception e) {
@@ -76,15 +76,18 @@ public class BankClient {
 
     private static boolean user_is_logged(IRemoteProvince rp) throws RemoteException {
         boolean is_logged=false;
-        String RFC = "";        
-        String Contraseña = "";
+        String usuario = "";        
+        String contrasena = "";
 
-        System.out.print ("Por favor introduzca su RFC:\n->");
-        RFC = entradaEscaner.nextLine();
+        System.out.print ("Por favor introduzca su usuario:\n->");
+        usuario = entradaEscaner.nextLine();
         
-        is_logged = rp.check_user(RFC);
+        System.out.print ("\nPor favor introduzca su contraseña:\n->");
+        contrasena = entradaEscaner.nextLine();
+                
+        is_logged = rp.check_user(usuario, contrasena);
         
-        if (is_logged) userRFC = RFC;
+        if (is_logged) userRFC = usuario;
         
        return is_logged;
     }
