@@ -20,4 +20,5 @@ public interface IRemoteProvince extends Remote {
   public void startTransaction(ArrayList<String> infoTransaction)throws RemoteException;
   public void enviarPropuesta(Transaccion t)throws RemoteException;
   public ArrayList obtenerNotificaciones(String userRFC, String estado)throws RemoteException;
+  public ArrayList getTransacciones(String userRFC)throws RemoteException;
 }

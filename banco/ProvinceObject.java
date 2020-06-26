@@ -93,5 +93,15 @@ public ProvinceObject() throws RemoteException {
       }
       return bancoRepository.obtenerNotificaciones(userRFC, estado);
     }
+
+    @Override
+    public ArrayList getTransacciones(String userRFC) throws RemoteException {
+        try {
+        System.out.println("Invoke obtener transacciones from " + getClientHost());
+      } catch (ServerNotActiveException snae) {
+        snae.printStackTrace();
+      }
+      return bancoRepository.getTransacciones(userRFC);
+    }
 }
 

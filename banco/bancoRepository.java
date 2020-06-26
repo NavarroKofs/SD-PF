@@ -203,19 +203,25 @@ public class bancoRepository {
     
     public static void generarGanadorVenta(ArrayList propuestasCompras) throws SQLException{
         String estado = "vendido";
+        ArrayList rechazados;
         //Aquí se ordena el array de Transacciones
 
-        Comparator<Integer> comparador = Collections.reverseOrder();
-        Collections.sort(propuestasCompras, comparador);
+        Collections.sort(propuestasCompras);
         
         //Aquí agarro el primer elemento (el que tiene el MAYOR precio)
         generarTransaccion((Transaccion) propuestasCompras.get(0));
-        actualizarPortafolio((Transaccion) propuestasCompras.get(0));
-        actualizarCompanias((Transaccion) propuestasCompras.get(0));
         almacenarNotificaciones((Transaccion)propuestasCompras.get(0), estado);
-
         
-    }
+        propuestasCompras.remove(0);
+        if(propuestasCompras.size() > 0){
+            rechazados = propuestasCompras;
+            estado = "perdido";
+            for(int i = 0; i < rechazados.size(); i++){
+                almacenarNotificaciones((Transaccion)rechazados.get(i), estado);
+            }
+        }        
+    }    
+    
     public static ArrayList obtenerNotificaciones(String RFC, String estado){
         ArrayList arr = new ArrayList();
         try {
@@ -262,8 +268,9 @@ public class bancoRepository {
         String estado = "comprado";
          ArrayList rechazados;
         //Aquí se ordena el array de Transacciones
-     
-        Collections.sort(publicaciones);
+             
+        Comparator<Integer> comparador = Collections.reverseOrder();
+        Collections.sort(publicaciones, comparador);
 
         //Aquí agarro el primer elemento (el que tiene el MENOR precio) <-----Es diferente weee
         generarTransaccion((Transaccion) publicaciones.get(0));
@@ -289,9 +296,8 @@ public class bancoRepository {
                 ArrayList listaSubastasActivas = subastaActiva.getPropuestasCompras();
                 for(int k=0; k<listaSubastasActivas.size(); k++) {
                     Transaccion transaccion = (Transaccion) listaSubastasActivas.get(k);
-                    if((transaccion.getRFCComp() == t.getRFCComp()) && (transaccion.isCompra() == t.isCompra())) {
+                    if((transaccion.getRFCComp().equals(t.getRFCComp())) && (transaccion.isCompra() == t.isCompra())) {
                         subastaActiva.setPropuestasCompras(t);
-                        subastaActiva.setCompra(t.isCompra());
                         subastaActiva.startTimer();
                         subastas.set(i, subastaActiva);
                         return 1;
@@ -379,12 +385,6 @@ public class bancoRepository {
                 pstmt.setString(3, t.getRFCUsuario());
                 pstmt.setString(4, t.getRFCComp());
             }
-                /*String SQL = "UPDATE usuarios SET numAcciones=?, ultPrecioCompra=? WHERE RFCUsuario=? AND RFCCompania=?";
-                pstmt = con.prepareStatement(SQL);
-                pstmt.setInt(1, numAcciones);
-                pstmt.setFloat(2, t.getPrecioOperacion());
-                pstmt.setString(3, t.getRFCUsuario());
-                pstmt.setString(4, t.getRFCComp());*/
         } else {
             String SQL = "INSERT INTO usuarios (RFCUsuario, RFCCompania, numAcciones, ultPrecioCompra) values(?,?,?,?)";
             pstmt = con.prepareStatement(SQL);

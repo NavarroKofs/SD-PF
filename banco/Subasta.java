@@ -67,7 +67,7 @@ public class Subasta {
                         Logger.getLogger(Subasta.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            }, 120000);
+            }, 60000);
         }
     }
 }

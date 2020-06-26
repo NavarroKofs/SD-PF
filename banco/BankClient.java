@@ -46,7 +46,8 @@ public class BankClient {
                              "1.-Comprar\n"+
                              "2.-Vender\n"+
                              "3.-Notificaciones\n"+
-                             "4.-Salir\n"+
+                             "4.-Ver transacciones\n"+
+                             "5.-Salir\n"+
                              "\n introduzca un numero\n->");
             selected_option = entradaEscaner.nextLine();
 
@@ -61,6 +62,9 @@ public class BankClient {
                     execute_notificaciones(rp);
                     break;
                 case "4":
+                    execute_ver_transacciones(rp);
+                    break;
+                case "5":
                     EXIT=true;
                     break;
                 default:
@@ -79,7 +83,7 @@ public class BankClient {
         String usuario = "";        
         String contrasena = "";
 
-        System.out.print ("Por favor introduzca su usuario:\n->");
+        System.out.print ("Por favor introduzca su RFC:\n->");
         usuario = entradaEscaner.nextLine();
         
         System.out.print ("\nPor favor introduzca su contraseña:\n->");
@@ -121,16 +125,14 @@ public class BankClient {
                String numAcciones = entradaEscaner.nextLine();
                System.out.print("cuantos desea ofrecer por accion?\n->");
                String ofertaPorAccion = entradaEscaner.nextLine();
-               
-               
+                              
                //Cambiar
-                infoTransaction.add(numAcciones);
-                infoTransaction.add(ofertaPorAccion); 
-               
-               
+               infoTransaction.add(numAcciones);
+               infoTransaction.add(ofertaPorAccion); 
+                              
                save_transaction(rp, infoTransaction);
                System.out.print("\n_____________________________________\n");
-               System.out.print("\tOFERTA REALIZADA\n");
+               System.out.print("\t HAZ ENTRADO A LA SUBASTA\n");
                System.out.print("_____________________________________\n\n");
             }else{
                System.out.println("\n!!!!La opción elegida no existe!!!!!\n");
@@ -174,7 +176,7 @@ public class BankClient {
                
                save_transaction(rp, infoTransaction);
                System.out.print("\n_____________________________________\n");
-               System.out.print("\tVenta publicada\n");
+               System.out.print("\tSubasta publicada\n");
                System.out.print("_____________________________________\n\n");
             }else{
                System.out.println("\n!!!!La opción elegida no existe!!!!!\n");
@@ -190,18 +192,24 @@ public class BankClient {
         ArrayList response = new ArrayList();
         response = rp.obtenerNotificaciones(userRFC, "comprado");
         
-        System.out.println("\n°°°°°°°°Acciones compradas°°°°°°°°");
+        System.out.println("\n°°°°°°°°Subastas ganadas°°°°°°°°");
         for (int i = 0; i < response.size(); i++) {
             System.out.println("->"+response.get(i).toString());
         }
+                
+        response = rp.obtenerNotificaciones(userRFC, "perdido");
+        System.out.println("\n°°°°°°°°Subastas perdidas°°°°°°°°");
+        for (int i = 0; i < response.size(); i++) {
+            System.out.println("->"+response.get(i).toString());
+        }
+        System.out.println("\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\n");
         
         response = rp.obtenerNotificaciones(userRFC, "vendido");
         System.out.println("\n°°°°°°°°Acciones vendidas°°°°°°°°");
         for (int i = 0; i < response.size(); i++) {
             System.out.println("->"+response.get(i).toString());
         }
-        System.out.println("\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\n");
-        
+        System.out.println("\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\n");        
     }
 
     private static void save_transaction(IRemoteProvince rp, ArrayList<String> infoTransaction) throws RemoteException {
@@ -209,18 +217,27 @@ public class BankClient {
         float oferta = parseFloat(infoTransaction.get(3));
         String RFCUsuario = infoTransaction.get(0);
         String RFCCompania = infoTransaction.get(1);
-        
-        Transaccion t = new Transaccion(RFCUsuario, RFCCompania, new Date(), cantidad, oferta);
+                
+        Transaccion t = new Transaccion(RFCUsuario, RFCCompania,  new java.sql.Timestamp(new java.util.Date().getTime()), cantidad, oferta);
 
         rp.enviarPropuesta(t);   
     }
 
     private static void imprimirPortafolio(IRemoteProvince rp) throws RemoteException {
-            ArrayList resp = rp.getPortafolio(userRFC);
-            System.out.print("|||||||Portafolio|||||||\n");
-            for (int i = 0; i < resp.size(); i++) {
-                System.out.println((i+1)+".-"+ resp.get(i).toString());
-            }
-            System.out.print("||||||||||||||||||||||||\n");
+        ArrayList resp = rp.getPortafolio(userRFC);
+        System.out.print("|||||||Portafolio|||||||\n");
+        for (int i = 0; i < resp.size(); i++) {
+            System.out.println((i+1)+".-"+ resp.get(i).toString());
+        }
+        System.out.print("||||||||||||||||||||||||\n");
+    }
+
+    private static void execute_ver_transacciones(IRemoteProvince rp) throws RemoteException {
+        ArrayList resp = rp.getTransacciones(userRFC);
+        System.out.print("////////Transancciones////////\n");
+        for (int i = 0; i < resp.size(); i++) {
+            System.out.println((i+1)+".-"+ resp.get(i).toString());
+        }
+        System.out.print("/////////////////////////////\n");        
     }
 }

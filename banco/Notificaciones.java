@@ -64,7 +64,7 @@ public class Notificaciones implements Serializable {
 
     @Override
     public String toString() {
-        return "precioOperacion=" + precioOperacion + " estado=" + estado;
+        return "Precio de la accion: " + precioOperacion + " estado de la transaccion: " + estado;
     }
     
 }
