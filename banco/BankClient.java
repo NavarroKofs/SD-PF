@@ -142,7 +142,7 @@ public class BankClient {
                     numAcciones = entradaEscaner.nextLine();
                     int compra = Integer.parseInt(numAcciones);
 
-                    int valor = (-1) * comp2.getNumAccionesDisp();
+                    int valor = comp2.getNumAccionesDisp();
 
                     if ((compra > 0) && (compra < valor)) {
                         salida = true;
@@ -160,12 +160,12 @@ public class BankClient {
                 do {
                     System.out.print("cuanto desea ofrecer por accion?\n->");
                     ofertaPorAccion = entradaEscaner.nextLine();
-                    int oferta = Integer.parseInt(ofertaPorAccion);
-                    if (oferta > 0) {
+                    float oferta = Float.parseFloat(ofertaPorAccion);
+                    if (oferta > comp2.getValorActualAccion()) {
                         accion = true;
 
                     } else {
-                        System.out.println("Por favor, haz una oferta superior o igual a 1");
+                        System.out.println("Por favor, haz una oferta superior o igual a " + comp2.getValorActualAccion());
                     }
 
                 } while (accion == false);

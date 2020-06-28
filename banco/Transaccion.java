@@ -82,9 +82,6 @@ public class Transaccion implements Serializable, Comparable<Transaccion>{
 
     @Override
     public String toString() {
-        if(fecha==null){
-            return " RFCComp= " + RFCComp + " || accionesOperadas=" + accionesOperadas + " || precioOperacion=" + precioOperacion;
-        }
         
         return " RFCComp= " + RFCComp + " || fecha=" + fecha + " || accionesOperadas=" + accionesOperadas + " || precioOperacion=" + precioOperacion;
     }

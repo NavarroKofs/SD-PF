@@ -65,7 +65,7 @@ public class bancoRepository {
             PreparedStatement pstmt = con.prepareStatement(QRY);
             pstmt.setString(1, t.getRFCUsuario());
             pstmt.setString(2, t.getRFCComp());
-            pstmt.setDate(3, null);
+            pstmt.setTimestamp(3, new java.sql.Timestamp(new java.util.Date().getTime()));
             pstmt.setInt(4, t.getAccionesOperadas());
             pstmt.setFloat(5, t.getPrecioOperacion());
 
