@@ -64,6 +64,6 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "Usuario{" + "RFCUsuario=" + RFCUsuario + ", RFCComp=" + RFCComp + ", numAcciones=" + numAcciones + ", ultPrecioCompra=" + ultPrecioCompra + '}';
+        return "RFCUsuario=" + RFCUsuario + ", RFCComp=" + RFCComp + ", numAcciones=" + numAcciones + ", ultPrecioCompra=" + ultPrecioCompra;
     }
 }

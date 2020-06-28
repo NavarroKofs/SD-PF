@@ -42,12 +42,12 @@ public class bancoRepository {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(QRY);
             while (rs.next()) {
-                Transaccion transaccion = new Transaccion();
-                transaccion.setRFCUsuario(rs.getString("RFCUsuario"));
-                transaccion.setRFCComp(rs.getString("RFCCompania"));
-                transaccion.setAccionesOperadas(rs.getInt("numAcciones"));
-                transaccion.setPrecioOperacion(rs.getFloat("ultPrecioCompra"));
-                arr.add(transaccion);
+                Usuario usuario = new Usuario();
+                usuario.setRFCUsuario(rs.getString("RFCUsuario"));
+                usuario.setRFCComp(rs.getString("RFCCompania"));
+                usuario.setNumAcciones(rs.getInt("numAcciones"));
+                usuario.setUltPrecioCompra(rs.getFloat("ultPrecioCompra"));
+                arr.add(usuario);
             }
         } catch (SQLException se) {
             System.out.println(se);
@@ -91,6 +91,7 @@ public class bancoRepository {
                 transaccion.setRFCComp(rs.getString("RFCComp"));
                 transaccion.setAccionesOperadas(rs.getInt("accionesOperadas"));
                 transaccion.setPrecioOperacion(rs.getFloat("precioOperacion"));
+                transaccion.setFecha(rs.getTimestamp("fecha"));
                 arr.add(transaccion);
             }
         } catch (SQLException se) {
@@ -272,7 +273,7 @@ public class bancoRepository {
         Comparator<Integer> comparador = Collections.reverseOrder();
         Collections.sort(publicaciones, comparador);
 
-        //Aquí agarro el primer elemento (el que tiene el MENOR precio) <-----Es diferente weee
+        //Aquí agarro el primer elemento (el que tiene el MAYOR precio) <-----Es diferente weee
         generarTransaccion((Transaccion) publicaciones.get(0));
         actualizarPortafolio((Transaccion) publicaciones.get(0));
         actualizarCompanias((Transaccion) publicaciones.get(0));
