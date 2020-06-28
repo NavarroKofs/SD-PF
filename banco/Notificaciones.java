@@ -64,7 +64,7 @@ public class Notificaciones implements Serializable {
 
     @Override
     public String toString() {
-        return "Haz " + getEstado() + " por $" + getPrecioOperacion() + " una(s) accion(es) a las " + getFecha() + ". Para más detalles revisar en la sección transacciones.";
+        return "Haz " + getEstado() + " por $" + getPrecioOperacion() + " una(s) accion(es) el " + getFecha() + ". Para más detalles revisar en la sección transacciones.";
     }
     
 }

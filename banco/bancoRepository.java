@@ -417,9 +417,8 @@ public class bancoRepository {
             companias.add(compania);
         }
         PreparedStatement pstmt;
-        Compania item = new Compania();
-        item = (Compania) companias.get(0);
-        int numAcciones = t.getAccionesOperadas() - item.getNumAccionesDisp();
+        Compania item = (Compania) companias.get(0);
+        int numAcciones = item.getNumAccionesDisp() - t.getAccionesOperadas();
         String SQL = "UPDATE companias SET numAccionesDisp=? WHERE RFC=?";
         pstmt = con.prepareStatement(SQL);
         pstmt.setInt(1, numAcciones);
