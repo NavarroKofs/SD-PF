@@ -142,7 +142,7 @@ public class BankClient {
                     numAcciones = entradaEscaner.nextLine();
                     int compra = Integer.parseInt(numAcciones);
 
-                    int valor = comp2.getNumAccionesDisp();
+                    int valor = (-1) * comp2.getNumAccionesDisp();
 
                     if ((compra > 0) && (compra < valor)) {
                         salida = true;
