@@ -23,7 +23,7 @@ public class BankClient {
     public static void main(String[] args) {
         try {
             //Get reference to rmi registry server
-            Registry registry = LocateRegistry.getRegistry("127.0.0.1");
+            Registry registry = LocateRegistry.getRegistry("192.168.1.74");
             IRemoteProvince rp = (IRemoteProvince) registry.lookup("Bank");
 
             while (!EXIT) {
