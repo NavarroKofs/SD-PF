@@ -211,6 +211,8 @@ public class bancoRepository {
         
         //Aquí agarro el primer elemento (el que tiene el MAYOR precio)
         generarTransaccion((Transaccion) propuestasCompras.get(0));
+        actualizarPortafolio((Transaccion) propuestasCompras.get(0));
+        actualizarCompanias((Transaccion) propuestasCompras.get(0));
         almacenarNotificaciones((Transaccion)propuestasCompras.get(0), estado);
         
         propuestasCompras.remove(0);
@@ -418,7 +420,7 @@ public class bancoRepository {
         }
         PreparedStatement pstmt;
         Compania item = (Compania) companias.get(0);
-        int numAcciones = item.getNumAccionesDisp() - t.getAccionesOperadas();
+        int numAcciones = item.getNumAccionesDisp() + t.getAccionesOperadas();
         String SQL = "UPDATE companias SET numAccionesDisp=? WHERE RFC=?";
         pstmt = con.prepareStatement(SQL);
         pstmt.setInt(1, numAcciones);

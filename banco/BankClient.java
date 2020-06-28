@@ -206,15 +206,15 @@ public class BankClient {
             String confirmation = entradaEscaner.nextLine();
 
             if (confirmation.toLowerCase().equals("s")) {
-                Transaccion comp2 = (Transaccion) response.get(parseInt(option_selected) - 1);
-                infoTransaction.add(comp2.getRFCComp());
+                Usuario info = (Usuario) response.get(parseInt(option_selected) - 1);
+                infoTransaction.add(info.getRFCComp());
                 do {
                     
                     System.out.print("cuantas acciones desea vender?\n->");
                     valor = Integer.parseInt(entradaEscaner.nextLine());
                     numAcciones = "-" + valor;
-                    if(valor > comp2.getAccionesOperadas()){
-                        System.out.println("Por favor, ingresa un valor menor a " + comp2.getAccionesOperadas());
+                    if(valor > info.getNumAcciones()){
+                        System.out.println("Por favor, ingresa un valor menor o igual a " + info.getNumAcciones());
                     }else{
                         salida = true;
                     }
