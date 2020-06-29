@@ -146,7 +146,7 @@ public class bancoRepository {
         return user_exist;
     }
         
-    public static void actualizarAccionesDisponibles(float i, Transaccion t) {
+    public static void actualizarAccionesDisponibles(Transaccion t) {
         try {
            
             String QRY = "UPDATE companias SET valorActualAccion =" + t + "WHERE RFC=" + t.getRFCComp();
